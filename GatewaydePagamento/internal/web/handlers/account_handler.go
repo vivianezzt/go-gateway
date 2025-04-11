@@ -47,9 +47,9 @@ func (h *AccountHandler) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.accountService.FindByAPIKey(apiKey)
+	output, err := h.accountService.GetAccountByAPIKey(apiKey) // corrigir o nome também
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError) // <-- Aqui corrigido
 		return
 	}
 
