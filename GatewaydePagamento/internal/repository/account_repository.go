@@ -12,6 +12,11 @@ type AccountRepository struct {
 	db *sql.DB
 }
 
+// FindById implements domain.AccountRepository.
+func (r *AccountRepository) FindById(id string) (*domain.Account, error) {
+	panic("unimplemented")
+}
+
 // NewAccountRepository cria um novo repositório de contas
 func NewAccountRepository(db *sql.DB) *AccountRepository {
 	return &AccountRepository{db: db}
