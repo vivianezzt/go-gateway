@@ -10,6 +10,7 @@ import (
 	"github.com/vivianezzt/go-gateway.git/internal/repository"
 	"github.com/vivianezzt/go-gateway.git/internal/service"
 	"github.com/vivianezzt/go-gateway.git/internal/web/server"
+	_"github.com/lib/pq" // Importa o driver PostgreSQL
 )
 // getEnv retorna variável de ambiente ou valor padrão se não definida
 func getEnv(key, defaultValue string) string {
