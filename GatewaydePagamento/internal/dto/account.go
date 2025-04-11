@@ -1,42 +1,42 @@
 package dto
 
-import "github.com/vivianezzt/go-gateway.git/internal/domain"
+import (
+	"time"
 
-type CreateAccount struct {
+	"github.com/vivianezzt/go-gateway.git/internal/domain"
+)
+
+// CreateAccountInput representa dados para criação de conta
+type CreateAccountInput struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
-type CreateAccountInput struct {
-	ID        string
-	Name      string  `json:"name"`
-	Email     string  `json:"email"`
-	Balance   float64 `json:"balance"`
-	APIKey    string  `jason:"api_key,omitempty"`
-	CreatedAt string  `json:"created_at"`
-	UpdatedAt string  `json:"updated_at"`
-}
+
+// AccountOutput representa dados da conta nas respostas da API
 type AccountOutput struct {
-	ID        string  `json:"id"`
-	Name      string  `json:"name"`
-	Email     string  `json:"email"`
-	Balance   float64 `json:"balance"`
-	APIKey    string  `json:"api_key,omitempty"`
-	CreatedAt string  `json:"created_at"`
-	UpdatedAt string  `json:"updated_at"`
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Balance   float64   `json:"balance"`
+	APIKey    string    `json:"api_key,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// ToAccount converte CreateAccountInput para domain.Account
 func ToAccount(input CreateAccountInput) *domain.Account {
 	return domain.NewAccount(input.Name, input.Email)
 }
 
+// FromAccount converte domain.Account para AccountOutput
 func FromAccount(account *domain.Account) AccountOutput {
 	return AccountOutput{
-		ID:    account.ID,
-		Name:  account.Name,
-		Email: account.Email,
-		Balance : account.Balance,
-		APIKey: account.APIKey,
-		CreatedAt: account.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		UpdatedAt: account.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		ID:        account.ID,
+		Name:      account.Name,
+		Email:     account.Email,
+		Balance:   account.Balance,
+		APIKey:    account.APIKey,
+		CreatedAt: account.CreatedAt,
+		UpdatedAt: account.UpdatedAt,
 	}
 }
