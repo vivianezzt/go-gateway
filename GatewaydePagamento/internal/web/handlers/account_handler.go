@@ -8,6 +8,7 @@ import (
 	"github.com/vivianezzt/go-gateway.git/internal/service"
 )
 
+// AccountHandler processa requisições HTTP relacionadas a contas
 type AccountHandler struct {
 	accountService *service.AccountService
 }
@@ -47,9 +48,9 @@ func (h *AccountHandler) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := h.accountService.GetAccountByAPIKey(apiKey) // corrigir o nome também
+	output, err := h.accountService.FindByAPIKey(apiKey)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError) // <-- Aqui corrigido
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
