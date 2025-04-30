@@ -31,16 +31,21 @@ func (s *Server) ConfigureRoutes() {
 	invoiceHandler := handlers.NewInvoiceHandler(s.invoiceService)
 	authMiddleware := middleware.NewAuthMiddleware(s.accountService)
 
-	s.router.Post("/accounts", accountHandler.Create)
-	s.router.Get("/accounts", accountHandler.Get)
+	// 🔓 Rotas públicas (sem autenticação)
+	s.router.Post("/accounts", accountHandler.Create) // Criação de conta
+	s.router.Get("/accounts", accountHandler.Get)     // Consulta de conta
 
+	// 🔐 Rotas protegidas por middleware (requer X-API-KEY)
 	s.router.Group(func(r chi.Router) {
 		r.Use(authMiddleware.Authenticate)
-		s.router.Post("/invoice", invoiceHandler.Create)
-		s.router.Get("/invoice/{id}", invoiceHandler.GetByID)
-		s.router.Get("/invoice", invoiceHandler.ListByAccount)
+
+		// 🧾 Faturas
+		r.Post("/invoice", invoiceHandler.Create)         // Cria nova fatura
+		r.Get("/invoice/{id}", invoiceHandler.GetByID)    // Busca fatura por ID
+		r.Get("/invoice", invoiceHandler.ListByAccount)   // Lista faturas da conta
 	})
 }
+
 
 func (s *Server) Start() error {
 	s.server = &http.Server{
