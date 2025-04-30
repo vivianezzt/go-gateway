@@ -8,8 +8,8 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "john@doew.com"
+    "name": "Paulo Cezar",
+    "email": "paulocezar@doew.com"
 }
 
 ### Obter dados da conta
