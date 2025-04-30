@@ -6,39 +6,40 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/vivianezzt/go-gateway/internal/service"
 	"github.com/vivianezzt/go-gateway/internal/web/handlers"
+	"github.com/vivianezzt/go-gateway/internal/web/middleware"
 )
 
 type Server struct {
 	router         *chi.Mux
 	server         *http.Server
 	accountService *service.AccountService
-	// invoiceService *service.InvoiceService
+	invoiceService *service.InvoiceService
 	port           string
 }
 
-func NewServer(accountService *service.AccountService, port string) *Server {
+func NewServer(accountService *service.AccountService, invoiceService *service.InvoiceService, port string) *Server {
 	return &Server{
 		router:         chi.NewRouter(),
 		accountService: accountService,
-		// invoiceService: invoiceService,
+		invoiceService: invoiceService,
 		port:           port,
 	}
 }
 
 func (s *Server) ConfigureRoutes() {
 	accountHandler := handlers.NewAccountHandler(s.accountService)
-	// invoiceHandler := handlers.NewInvoiceHandler(s.invoiceService)
-	// authMiddleware := middleware.NewAuthMiddleware(s.accountService)
+	invoiceHandler := handlers.NewInvoiceHandler(s.invoiceService)
+	authMiddleware := middleware.NewAuthMiddleware(s.accountService)
 
 	s.router.Post("/accounts", accountHandler.Create)
 	s.router.Get("/accounts", accountHandler.Get)
 
-	// s.router.Group(func(r chi.Router) {
-	// 	// r.Use(authMiddleware.Authenticate)
-	// 	s.router.Post("/invoice", invoiceHandler.Create)
-	// 	s.router.Get("/invoice/{id}", invoiceHandler.GetByID)
-	// 	s.router.Get("/invoice", invoiceHandler.ListByAccount)
-	// })
+	s.router.Group(func(r chi.Router) {
+		r.Use(authMiddleware.Authenticate)
+		s.router.Post("/invoice", invoiceHandler.Create)
+		s.router.Get("/invoice/{id}", invoiceHandler.GetByID)
+		s.router.Get("/invoice", invoiceHandler.ListByAccount)
+	})
 }
 
 func (s *Server) Start() error {
